@@ -1,0 +1,15 @@
+.queen__meta {
+    display: block;
+}
+
+.queen__meta label {
+    display: inline-block;
+    width: 160px;
+    text-align: left;
+}
+
+.queen__meta input {
+    display: inline-block;
+    width: 200px;
+    text-align: left;
+}

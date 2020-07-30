@@ -82,21 +82,7 @@ function queen_meta_box_callback( $post ) {
 	$key_queen_visit = get_post_meta( $post->ID, 'q_visit', 1 );
 	?>
 	<style>
-		.queen__meta {
-			display: block;
-		}
 
-		.queen__meta label {
-			display: inline-block;
-			width: 160px;
-			text-align: left;
-		}
-
-		.queen__meta input {
-			display: inline-block;
-			width: 200px;
-			text-align: left;
-		}
 	</style>
 	<div class="queen__meta options_group">
 		<p class="queen__meta-item">
