@@ -20,7 +20,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}// Exit if accessed directly
+}
+// Exit if accessed directly
 
 
 /*
@@ -46,7 +47,7 @@ require_once ARENA_QUEEN_DIR . 'functions.php';
 add_filter( 'template_include', 'queen_post_type_templates' );
 function queen_post_type_templates( $template ) {
 	if ( is_singular( 'queen' ) ) {
-		if ( $new_template = ARENA_QUEEN_TEMPLATE_PATH . 'templates/single-queen.php' ) {
+		if ( $new_template = plugin_dir_path( __FILE__ ) . '/templates/single-queen.php' ) {
 			$template = $new_template;
 		}
 	}
