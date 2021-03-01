@@ -58,4 +58,15 @@ function queen_post_type_templates( $template ) {
 add_action( 'admin_enqueue_scripts', 'queen_post_type_admin_styles' );
 function queen_post_type_admin_styles() {
 	wp_enqueue_style( 'queen_post_type_admin_styles', plugin_dir_url(__FILE__) . 'assets/css/style.css' );
+//	wp_enqueue_script( 'queen_post_type_admin_script', plugin_dir_url(__FILE__) . 'assets/js/custom.js' );
 }
+add_action( 'wp_enqueue_scripts', 'queen_post_type_styles' );
+function queen_post_type_styles() {
+
+	wp_enqueue_script( 'queen_post_type_admin_script', plugin_dir_url(__FILE__) . 'assets/js/custom.js', array('jquery'), 1, true );
+	wp_localize_script('queen_post_type_admin_script', 'myPlugin', array(
+		'ajaxurl' => admin_url('admin-ajax.php')
+
+	));
+}
+

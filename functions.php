@@ -80,33 +80,34 @@ function queen_meta_box_callback( $post ) {
 	$key_queen_end   = get_post_meta( $post->ID, 'q_end', 1 );
 	$key_queen_phone = get_post_meta( $post->ID, 'q_phone', 1 );
 	$key_queen_visit = get_post_meta( $post->ID, 'q_visit', 1 );
+
 	?>
-	<style>
+    <style>
 
-	</style>
-	<div class="queen__meta options_group">
-		<p class="queen__meta-item">
-			<label for="name_date__start">Дата начала:</label>
-			<input id="name_date__start" type="date" name="name_date__start"
-			       value="<?php echo $key_queen_start; ?>"/>
-		</p>
-		<p class="queen__meta-item">
-			<label for="name_date__end">Дата окончания:</label>
-			<input id="name_date__end" type="date" name="name_date__end"
-			       value="<?php echo $key_queen_end; ?>"/>
-		</p>
-		<p class="queen__meta-item">
-			<label for="name_queen__phone">Номер телефона:</label>
-			<input id="name_queen__phone" type="text" name="name_queen__phone"
-			       value="<?php echo $key_queen_phone; ?>"/>
-		</p>
-		<p class="queen__meta-item">
-			<label for="name_queen__visit">Последнее посещение:</label>
-			<input id="name_queen__visit" type="text" name="name_queen__visit"
-			       value="<?php echo $key_queen_visit; ?>"/>
-		</p>
+    </style>
+    <div class="queen__meta options_group">
+        <p class="queen__meta-item">
+            <label for="name_date__start">Дата начала:</label>
+            <input id="name_date__start" type="date" name="name_date__start"
+                   value="<?php echo $key_queen_start; ?>"/>
+        </p>
+        <p class="queen__meta-item">
+            <label for="name_date__end">Дата окончания:</label>
+            <input id="name_date__end" type="date" name="name_date__end"
+                   value="<?php echo $key_queen_end; ?>"/>
+        </p>
+        <p class="queen__meta-item">
+            <label for="name_queen__phone">Номер телефона:</label>
+            <input id="name_queen__phone" type="text" name="name_queen__phone"
+                   value="<?php echo $key_queen_phone; ?>"/>
+        </p>
+        <p class="queen__meta-item">
+            <label for="name_queen__visit">Последнее посещение:</label>
+            <input id="name_queen__visit" type="text" name="name_queen__visit"
+                   value="<?php echo $key_queen_visit; ?>"/>
+        </p>
 
-	</div>
+    </div>
 	<?php
 }
 
@@ -143,7 +144,13 @@ function queen_save_postdata( $post_id ) {
 	}
 
 	$data_q_start = sanitize_text_field( $_POST['name_date__start'] );
-	$data_q_end   = sanitize_text_field( $_POST['name_date__end'] );
+
+	if ( ! isset( $_POST['name_date__end'] ) ) {
+		strtotime( $data_q_start );
+		$data_q_end = date_i18n( 'j M Y H:i:s', strtotime( '1999-11-15' ) );
+	} else {
+		$data_q_end = sanitize_text_field( $_POST['name_date__end'] );
+	}
 	$data_q_phone = sanitize_text_field( $_POST['name_queen__phone'] );
 	$data_q_visit = sanitize_text_field( $_POST['name_queen__visit'] );
 
@@ -166,19 +173,19 @@ function queen__date() {
 	if ( $current_time_date > $next_visit_date ) {
 
 		?>
-		<script>
+        <script>
 
-		</script>
-		<form name="form_name" method="POST" action="">
-			<div class="d-flex align-items-center">
-				<label style="color: white; padding-right: 5px; margin-bottom: 0;" for="checkbox_queen">Отметить
-					посещение: </label>
-				<input id="checkbox_queen" type="checkbox" name="f" required/>
-			</div>
+        </script>
+        <form name="form_name" method="POST" action="">
+            <div class="d-flex align-items-center">
+                <label style="color: white; padding-right: 5px; margin-bottom: 0;" for="checkbox_queen">Отметить
+                    посещение: </label>
+                <input id="checkbox_queen" type="checkbox" name="f" required/>
+            </div>
 
-			<br>
-			<input type="submit" class="arena__button" name="f1" value="Отправить"/>
-		</form>
+            <br>
+            <input type="submit" class="arena__button" name="f1" value="Отправить"/>
+        </form>
 		<?php
 
 		if ( isset( $_POST['f'] ) ) {
@@ -247,10 +254,8 @@ add_action( 'init', function ( $post_id ) {
 	);
 
 	foreach ( $queens as $queen ) {
-
 		$end_date  = get_post_meta( $post_id, 'q_end', true );
 		$end_date1 = date( "Y-m-d", strtotime( $end_date ) );
-
 		if ( $end_date1 > $today ) {
 			$post_id['post_status'] = 'draft';
 			wp_update_post( $post_id );
@@ -259,8 +264,6 @@ add_action( 'init', function ( $post_id ) {
 		}
 	}
 } );
-
-
 
 
 function modify_user_table( $columns ) {
@@ -278,12 +281,26 @@ function modify_user_table_row( $column_name, $user_id ) {
 }
 
 
-//add_action( 'wp_ajax_queen', 'function_echo' );
-//add_action( 'wp_ajax_nopriv_queen', 'function_echo' );
-//function function_echo($post) {
-//	date_default_timezone_set( 'Europe/Minsk' );
-//	$current_time_str = date( "d.m.Y H:i" );
-//
-//	update_post_meta( $post->ID, 'q_visit', $current_time_str );
-//	wp_die();
-//}
+
+
+add_action( 'wp_ajax_queen_update_date', 'queen_update_date', 99 );
+function queen_update_date() {
+	if ( isset( $_POST['queen_update_date_button'] ) ) {
+		update_post_meta( $post->ID, 'q_visit', '12' );
+	} else {
+		die();
+	}
+}
+
+
+
+add_action( 'wp_ajax_my_action', 'my_action_callback' );
+function my_action_callback() {
+	$whatever = intval( $_POST['whatever'] );
+
+	$whatever += 10;
+	echo $whatever;
+
+	wp_die(); // выход нужен для того, чтобы в ответе не было ничего лишнего, только то что возвращает функция
+}
+
